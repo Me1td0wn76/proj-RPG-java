@@ -12,9 +12,7 @@ public class SaveSelectScreen extends GameScreen {
     private boolean isNewGame = false;
     private SaveDataManager.SaveData[] saveSlots;
 
-    private boolean upPressed = false;
-    private boolean downPressed = false;
-    private boolean spacePressed = false;
+    private InputController inputController = new InputController();
 
     public SaveSelectScreen(SaveDataManager saveDataManager) {
         this.saveDataManager = saveDataManager;
@@ -23,33 +21,20 @@ public class SaveSelectScreen extends GameScreen {
 
     @Override
     public void update(Input input) {
-        // 上キーでスロット選択を上に移動
-        if (input.isKeyPressed(GLFW.GLFW_KEY_UP) && !upPressed) {
-            upPressed = true;
+        // 上下キーでスロット選択（InputControllerを使用）
+        inputController.handleKeyInput(input, GLFW.GLFW_KEY_UP, () -> {
             selectedSlot = (selectedSlot - 1 + 10) % 10;
-        }
-        if (!input.isKeyPressed(GLFW.GLFW_KEY_UP)) {
-            upPressed = false;
-        }
+        });
 
-        // 下キーでスロット選択を下に移動
-        if (input.isKeyPressed(GLFW.GLFW_KEY_DOWN) && !downPressed) {
-            downPressed = true;
+        inputController.handleKeyInput(input, GLFW.GLFW_KEY_DOWN, () -> {
             selectedSlot = (selectedSlot + 1) % 10;
-        }
-        if (!input.isKeyPressed(GLFW.GLFW_KEY_DOWN)) {
-            downPressed = false;
-        }
+        });
 
-        // スペースキーで選択実行
-        if (input.isKeyPressed(GLFW.GLFW_KEY_SPACE) && !spacePressed) {
-            spacePressed = true;
+        // スペースキーで選択実行（InputControllerを使用）
+        inputController.handleKeyInput(input, GLFW.GLFW_KEY_SPACE, () -> {
             isNewGame = (saveSlots[selectedSlot] == null);
             transitionRequested = true;
-        }
-        if (!input.isKeyPressed(GLFW.GLFW_KEY_SPACE)) {
-            spacePressed = false;
-        }
+        });
     }
 
     @Override
@@ -119,9 +104,7 @@ public class SaveSelectScreen extends GameScreen {
 
         selectedSlot = 0;
         isNewGame = false;
-        upPressed = false;
-        downPressed = false;
-        spacePressed = false;
+        inputController.reset(); // 入力状態をリセット
     }
 
     public int getSelectedSlot() {

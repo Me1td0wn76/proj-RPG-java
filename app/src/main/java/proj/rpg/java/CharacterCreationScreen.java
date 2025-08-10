@@ -48,7 +48,7 @@ public class CharacterCreationScreen extends GameScreen {
     private int selectedSkillIndex = 0;
 
     // 入力制御
-    private boolean[] keyPressed = new boolean[512];
+    private InputController inputController = new InputController();
 
     public CharacterCreationScreen() {
         playerName = new StringBuilder();
@@ -70,22 +70,26 @@ public class CharacterCreationScreen extends GameScreen {
     }
 
     private void updateNameInput(Input input) {
-        // 文字入力（A-Zのみ）
+        // 文字入力（A-Zのみ）InputControllerを使用
         for (int key = GLFW.GLFW_KEY_A; key <= GLFW.GLFW_KEY_Z; key++) {
-            if (input.isKeyPressed(key) && playerName.length() < maxNameLength) {
-                char c = (char) ('A' + (key - GLFW.GLFW_KEY_A));
-                playerName.append(c);
-                break;
+            final int currentKey = key; // lambdaで使用するためfinalにする
+            inputController.handleKeyInputFast(input, key, () -> {
+                if (playerName.length() < maxNameLength) {
+                    char c = (char) ('A' + (currentKey - GLFW.GLFW_KEY_A));
+                    playerName.append(c);
+                }
+            });
+        }
+
+        // バックスペースで文字削除（InputControllerを使用）
+        inputController.handleKeyInput(input, GLFW.GLFW_KEY_BACKSPACE, () -> {
+            if (playerName.length() > 0) {
+                playerName.deleteCharAt(playerName.length() - 1);
             }
-        }
+        });
 
-        // バックスペースで文字削除
-        if (input.isKeyPressed(GLFW.GLFW_KEY_BACKSPACE) && playerName.length() > 0) {
-            playerName.deleteCharAt(playerName.length() - 1);
-        }
-
-        // エンターキーで次のステップへ
-        handleKeyInput(input, GLFW.GLFW_KEY_ENTER, () -> {
+        // エンターキーで次のステップへ（InputControllerを使用）
+        inputController.handleKeyInput(input, GLFW.GLFW_KEY_ENTER, () -> {
             if (playerName.length() > 0) {
                 currentStep = CreationStep.JOB_SELECTION;
                 initializeJobSelection();
@@ -94,72 +98,61 @@ public class CharacterCreationScreen extends GameScreen {
     }
 
     private void updateJobSelection(Input input) {
-        // 上下キーで役職選択
-        handleKeyInput(input, GLFW.GLFW_KEY_UP, () -> {
+        // 上下キーで役職選択（InputControllerを使用）
+        inputController.handleKeyInput(input, GLFW.GLFW_KEY_UP, () -> {
             selectedJobIndex = (selectedJobIndex - 1 + jobNames.length) % jobNames.length;
         });
 
-        handleKeyInput(input, GLFW.GLFW_KEY_DOWN, () -> {
+        inputController.handleKeyInput(input, GLFW.GLFW_KEY_DOWN, () -> {
             selectedJobIndex = (selectedJobIndex + 1) % jobNames.length;
         });
 
-        // エンターキーで次のステップへ
-        handleKeyInput(input, GLFW.GLFW_KEY_ENTER, () -> {
+        // エンターキーで次のステップへ（InputControllerを使用）
+        inputController.handleKeyInput(input, GLFW.GLFW_KEY_ENTER, () -> {
             currentStep = CreationStep.SKILL_ALLOCATION;
             initializeSkillAllocation();
         });
 
-        // ESCキーで前のステップに戻る
-        handleKeyInput(input, GLFW.GLFW_KEY_ESCAPE, () -> {
+        // ESCキーで前のステップに戻る（InputControllerを使用）
+        inputController.handleKeyInput(input, GLFW.GLFW_KEY_ESCAPE, () -> {
             currentStep = CreationStep.NAME_INPUT;
         });
     }
 
     private void updateSkillAllocation(Input input) {
-        // 上下キーでスキル選択
-        handleKeyInput(input, GLFW.GLFW_KEY_UP, () -> {
+        // 上下キーでスキル選択（InputControllerを使用）
+        inputController.handleKeyInput(input, GLFW.GLFW_KEY_UP, () -> {
             selectedSkillIndex = (selectedSkillIndex - 1 + skillNames.length) % skillNames.length;
         });
 
-        handleKeyInput(input, GLFW.GLFW_KEY_DOWN, () -> {
+        inputController.handleKeyInput(input, GLFW.GLFW_KEY_DOWN, () -> {
             selectedSkillIndex = (selectedSkillIndex + 1) % skillNames.length;
         });
 
-        // 左キーでポイント減少
-        handleKeyInput(input, GLFW.GLFW_KEY_LEFT, () -> {
+        // 左右キーでポイント増減（連続入力対応）
+        inputController.handleKeyInputRepeatable(input, GLFW.GLFW_KEY_LEFT, () -> {
             if (allocatedPoints[selectedSkillIndex] > 0) {
                 allocatedPoints[selectedSkillIndex]--;
                 availablePoints++;
             }
         });
 
-        // 右キーでポイント増加
-        handleKeyInput(input, GLFW.GLFW_KEY_RIGHT, () -> {
+        inputController.handleKeyInputRepeatable(input, GLFW.GLFW_KEY_RIGHT, () -> {
             if (availablePoints > 0) {
                 allocatedPoints[selectedSkillIndex]++;
                 availablePoints--;
             }
         });
 
-        // エンターキーでキャラクター作成完了
-        handleKeyInput(input, GLFW.GLFW_KEY_ENTER, () -> {
+        // エンターキーでキャラクター作成完了（InputControllerを使用）
+        inputController.handleKeyInput(input, GLFW.GLFW_KEY_ENTER, () -> {
             transitionRequested = true;
         });
 
-        // ESCキーで前のステップに戻る
-        handleKeyInput(input, GLFW.GLFW_KEY_ESCAPE, () -> {
+        // ESCキーで前のステップに戻る（InputControllerを使用）
+        inputController.handleKeyInput(input, GLFW.GLFW_KEY_ESCAPE, () -> {
             currentStep = CreationStep.JOB_SELECTION;
         });
-    }
-
-    private void handleKeyInput(Input input, int key, Runnable action) {
-        boolean isPressed = input.isKeyPressed(key);
-
-        if (isPressed && !keyPressed[key]) {
-            action.run();
-        }
-
-        keyPressed[key] = isPressed;
     }
 
     private void initializeJobSelection() {
@@ -359,7 +352,7 @@ public class CharacterCreationScreen extends GameScreen {
         selectedSkillIndex = 0;
         availablePoints = 20;
         allocatedPoints = new int[5];
-        keyPressed = new boolean[512];
+        inputController.reset(); // 入力状態をリセット
     }
 
     public String getPlayerName() {

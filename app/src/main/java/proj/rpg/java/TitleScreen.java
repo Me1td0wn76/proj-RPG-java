@@ -8,21 +8,16 @@ import org.lwjgl.glfw.GLFW;
  */
 public class TitleScreen extends GameScreen {
     private float titleTimer = 0.0f;
-    private boolean spacePressed = false;
+    private InputController inputController = new InputController();
 
     @Override
     public void update(Input input) {
         titleTimer += 0.016f; // 60FPSでの時間更新
 
-        // スペースキーでメニューに進む
-        if (input.isKeyPressed(GLFW.GLFW_KEY_SPACE) && !spacePressed) {
-            spacePressed = true;
+        // スペースキーでメニューに進む（InputControllerを使用）
+        inputController.handleKeyInput(input, GLFW.GLFW_KEY_SPACE, () -> {
             transitionRequested = true;
-        }
-
-        if (!input.isKeyPressed(GLFW.GLFW_KEY_SPACE)) {
-            spacePressed = false;
-        }
+        });
     }
 
     @Override
@@ -70,6 +65,6 @@ public class TitleScreen extends GameScreen {
     public void onEnter() {
         super.onEnter();
         titleTimer = 0.0f;
-        spacePressed = false;
+        inputController.reset(); // 入力状態をリセット
     }
 }

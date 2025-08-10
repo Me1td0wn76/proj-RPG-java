@@ -13,50 +13,34 @@ public class MainMenuScreen extends GameScreen {
     private String selectedOption = "";
     private float selectionTimer = 0.0f; // アニメーション用タイマー
 
-    private boolean upPressed = false;
-    private boolean downPressed = false;
-    private boolean spacePressed = false;
+    private InputController inputController = new InputController();
 
     @Override
     public void update(Input input) {
         selectionTimer += 0.016f; // 60FPSでの時間更新
 
-        // 上キーでメニュー項目を上に移動
-        if (input.isKeyPressed(GLFW.GLFW_KEY_UP) && !upPressed) {
-            upPressed = true;
+        // 上キーでメニュー項目を上に移動（InputControllerを使用）
+        inputController.handleKeyInput(input, GLFW.GLFW_KEY_UP, () -> {
             selectedIndex = (selectedIndex - 1 + menuItems.length) % menuItems.length;
             selectionTimer = 0.0f; // 選択変更時にタイマーリセット
-        }
-        if (!input.isKeyPressed(GLFW.GLFW_KEY_UP)) {
-            upPressed = false;
-        }
+        });
 
-        // 下キーでメニュー項目を下に移動
-        if (input.isKeyPressed(GLFW.GLFW_KEY_DOWN) && !downPressed) {
-            downPressed = true;
+        // 下キーでメニュー項目を下に移動（InputControllerを使用）
+        inputController.handleKeyInput(input, GLFW.GLFW_KEY_DOWN, () -> {
             selectedIndex = (selectedIndex + 1) % menuItems.length;
             selectionTimer = 0.0f; // 選択変更時にタイマーリセット
-        }
-        if (!input.isKeyPressed(GLFW.GLFW_KEY_DOWN)) {
-            downPressed = false;
-        }
+        });
 
-        // スペースキーで選択実行
-        if (input.isKeyPressed(GLFW.GLFW_KEY_SPACE) && !spacePressed) {
-            spacePressed = true;
-
+        // スペースキーで選択実行（InputControllerを使用）
+        inputController.handleKeyInput(input, GLFW.GLFW_KEY_SPACE, () -> {
             switch (selectedIndex) {
                 case 0 -> selectedOption = "START_NEW";
                 case 1 -> selectedOption = "CONTINUE";
                 case 2 -> selectedOption = "SETTINGS";
                 case 3 -> selectedOption = "EXIT";
             }
-
             transitionRequested = true;
-        }
-        if (!input.isKeyPressed(GLFW.GLFW_KEY_SPACE)) {
-            spacePressed = false;
-        }
+        });
     }
 
     @Override
@@ -123,9 +107,7 @@ public class MainMenuScreen extends GameScreen {
         selectedIndex = 0;
         selectedOption = "";
         selectionTimer = 0.0f;
-        upPressed = false;
-        downPressed = false;
-        spacePressed = false;
+        inputController.reset(); // 入力状態をリセット
     }
 
     public String getSelectedOption() {
