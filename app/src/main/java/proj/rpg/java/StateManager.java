@@ -111,31 +111,68 @@ public class StateManager {
     }
 
     public void render(Renderer renderer) {
+        // 画面クリア
+        uiRenderer.clear(0.1f, 0.1f, 0.3f, 1.0f);
+
         switch (currentState) {
             case TITLE -> {
-                titleScreen.render(uiRenderer);
                 uiRenderer.beginUI();
-                
-                // タイトルテキスト
+
+                // タイトルテキスト（大きく、見やすく）
                 String titleText = "DUNGEON EXPLORER";
-                float titleX = 480 - (titleText.length() * 12 * 2.0f) / 2; // 中央揃え
-                uiRenderer.drawText(titleText, titleX, 200, 2.0f, 1.0f, 1.0f, 0.8f, 1.0f);
-                
-                // サブタイトル
-                String subtitleText = "A Wizardry-Style 3D RPG";
-                float subtitleX = 480 - (subtitleText.length() * 12) / 2;
-                uiRenderer.drawText(subtitleText, subtitleX, 260, 1.0f, 0.8f, 0.8f, 0.6f, 1.0f);
-                
-                // Press SPACE メッセージ
-                String pressText = "Press SPACE to continue";
-                float pressX = 480 - (pressText.length() * 12) / 2;
-                uiRenderer.drawText(pressText, pressX, 400, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
-                
+                float titleX = 480 - (titleText.length() * 12) / 2;
+                uiRenderer.drawText(titleText, titleX, 150.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+
+                // メニュー項目を表示
+                String[] menuItems = { "Start New Game", "Continue", "Settings", "Exit" };
+                float menuStartY = 250;
+
+                for (int i = 0; i < menuItems.length; i++) {
+                    float y = menuStartY + i * 40;
+                    float x = 480 - (menuItems[i].length() * 12) / 2;
+                    uiRenderer.drawText(menuItems[i], x, y, 1.0f, 0.9f, 0.9f, 0.9f, 1.0f);
+                }
+
+                // 操作説明
+                String instruction = "Press SPACE to start";
+                float instrX = 480 - (instruction.length() * 12) / 2;
+                uiRenderer.drawText(instruction, instrX, 450.0f, 1.0f, 1.0f, 1.0f, 0.8f, 1.0f);
+
                 uiRenderer.endUI();
             }
             case MAIN_MENU -> {
                 uiRenderer.beginUI();
-                mainMenuScreen.render(uiRenderer);
+
+                // メインメニュータイトル
+                String title = "MAIN MENU";
+                float titleX = 480 - (title.length() * 12 * 1.5f) / 2;
+                uiRenderer.drawText(title, titleX, 100.0f, 1.5f, 0.9f, 0.9f, 0.9f, 1.0f);
+
+                // メニュー項目
+                String[] menuItems = { "New Game", "Continue", "Settings", "Exit" };
+                float menuStartY = 200;
+                float menuSpacing = 40;
+
+                for (int i = 0; i < menuItems.length; i++) {
+                    float y = menuStartY + i * menuSpacing;
+                    float x = 480 - (menuItems[i].length() * 12) / 2;
+
+                    // 選択中の項目を明るく表示
+                    boolean selected = (i == 0); // 仮に最初の項目を選択中とする
+                    if (selected) {
+                        String cursor = "> ";
+                        uiRenderer.drawText(cursor, x - 30, y, 1.0f, 1.0f, 1.0f, 0.2f, 1.0f);
+                        uiRenderer.drawText(menuItems[i], x, y, 1.0f, 1.0f, 1.0f, 0.8f, 1.0f);
+                    } else {
+                        uiRenderer.drawText(menuItems[i], x, y, 1.0f, 0.7f, 0.7f, 0.7f, 1.0f);
+                    }
+                }
+
+                // 操作説明
+                String instruction = "UP/DOWN: Navigate, SPACE: Select";
+                float instrX = 480 - (instruction.length() * 10) / 2;
+                uiRenderer.drawText(instruction, instrX, 450.0f, 0.8f, 0.6f, 0.6f, 0.6f, 1.0f);
+
                 uiRenderer.endUI();
             }
             case SAVE_SELECT -> {
