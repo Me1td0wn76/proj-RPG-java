@@ -74,4 +74,19 @@ public class Player {
             y = ny;
         }
     }
+
+    /**
+     * プレイヤーの位置を設定（セーブデータロード用）
+     */
+    public void setPosition(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    /**
+     * プレイヤーの向きを設定（セーブデータロード用）
+     */
+    public void setFacing(Facing facing) {
+        this.facing = facing;
+    }
 }

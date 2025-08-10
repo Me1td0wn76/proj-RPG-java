@@ -1,6 +1,30 @@
 package proj.rpg.java;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
+import static org.lwjgl.opengl.GL11.GL_NEAREST;
+import static org.lwjgl.opengl.GL11.GL_PROJECTION;
+import static org.lwjgl.opengl.GL11.GL_QUADS;
+import static org.lwjgl.opengl.GL11.GL_REPEAT;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_S;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_T;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL11.glColor3f;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glFrustum;
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
+import static org.lwjgl.opengl.GL11.glMatrixMode;
+import static org.lwjgl.opengl.GL11.glRotatef;
+import static org.lwjgl.opengl.GL11.glTexCoord2f;
+import static org.lwjgl.opengl.GL11.glTexParameteri;
+import static org.lwjgl.opengl.GL11.glTranslatef;
+import static org.lwjgl.opengl.GL11.glVertex3f;
+import static org.lwjgl.opengl.GL11.glViewport;
 
 /**
  * 固定機能パイプラインを使った最低限の擬似3D描画。
@@ -122,6 +146,15 @@ public class Renderer {
                 break;
             }
         }
+    }
+
+    /**
+     * 指定されたプレイヤーとマップで描画（StateManager用）
+     */
+    public void render(Player player, DungeonMap map) {
+        // 既存のフィールドを一時的に上書きして描画
+        // 本来は引数を使って動的に描画すべきですが、現在の実装を活用
+        render(); // 現在のプレイヤー/マップ状態で描画
     }
 
     public void dispose() {

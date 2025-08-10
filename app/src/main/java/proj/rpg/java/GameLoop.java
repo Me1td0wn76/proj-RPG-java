@@ -1,11 +1,15 @@
 package proj.rpg.java;
 
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.glfw.GLFW.glfwPollEvents;
+import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
+import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.glClear;
 
 /**
  * シンプルな固定フレームレートのゲームループ（約60FPS）。
- * update() -> render() を呼び出し、ウィンドウイベントも処理。
+ * StateManagerを使用して各画面の更新と描画を管理。
  */
 public class GameLoop {
     private final long window;
@@ -13,13 +17,18 @@ public class GameLoop {
     private final Renderer renderer;
     private final Player player;
     private final DungeonMap map;
+    private final StateManager stateManager;
+    private final UIRenderer uiRenderer;
 
-    public GameLoop(long window, Input input, Renderer renderer, Player player, DungeonMap map) {
+    public GameLoop(long window, Input input, Renderer renderer, Player player, DungeonMap map,
+            StateManager stateManager, UIRenderer uiRenderer) {
         this.window = window;
         this.input = input;
         this.renderer = renderer;
         this.player = player;
         this.map = map;
+        this.stateManager = stateManager;
+        this.uiRenderer = uiRenderer;
     }
 
     public void start() {
@@ -36,14 +45,14 @@ public class GameLoop {
             }
             last = now;
 
-            // 入力更新
-            input.update(player, map);
+            // StateManagerで状態更新
+            stateManager.update();
 
             // 画面クリア
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            // 描画
-            renderer.render();
+            // StateManagerで描画
+            stateManager.render(renderer);
 
             // スワップ
             glfwSwapBuffers(window);

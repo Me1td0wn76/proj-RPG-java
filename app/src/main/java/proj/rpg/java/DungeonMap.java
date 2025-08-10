@@ -14,6 +14,22 @@ public class DungeonMap {
         this.tiles = tiles;
     }
 
+    /**
+     * デフォルトマップでのコンストラクタ
+     */
+    public DungeonMap() {
+        this(8, 8, new int[][] {
+                { 1, 1, 1, 1, 1, 1, 1, 1 },
+                { 1, 0, 0, 0, 0, 0, 0, 1 },
+                { 1, 0, 1, 0, 1, 1, 0, 1 },
+                { 1, 0, 1, 0, 0, 0, 0, 1 },
+                { 1, 0, 1, 1, 1, 0, 1, 1 },
+                { 1, 0, 0, 0, 0, 0, 0, 1 },
+                { 1, 0, 1, 0, 1, 0, 0, 1 },
+                { 1, 1, 1, 1, 1, 1, 1, 1 }
+        });
+    }
+
     public boolean isWall(int x, int y) {
         if (x < 0 || y < 0 || x >= width || y >= height)
             return true; // 外は壁扱い

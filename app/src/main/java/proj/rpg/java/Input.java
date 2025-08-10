@@ -1,6 +1,13 @@
 package proj.rpg.java;
 
-import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_E;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_Q;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_S;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
+import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
+import static org.lwjgl.glfw.GLFW.glfwGetKey;
 
 /**
  * キー入力をポーリングしてプレイヤー制御へ反映。
@@ -46,5 +53,12 @@ public class Input {
             player.strafeRight(map);
             cooldown = COOLDOWN_FRAMES;
         }
+    }
+
+    /**
+     * 指定キーが押されているかを確認（UI用）
+     */
+    public boolean isKeyPressed(int keyCode) {
+        return glfwGetKey(window, keyCode) == GLFW_PRESS;
     }
 }
