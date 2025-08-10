@@ -87,7 +87,10 @@ public class StateManager {
                 if (characterCreationScreen.shouldTransition()) {
                     // キャラクター作成完了 → セーブして フィールドへ
                     String playerName = characterCreationScreen.getPlayerName();
-                    currentSaveData = new SaveDataManager.SaveData(playerName, 1, 2, 2, "NORTH");
+                    String jobName = characterCreationScreen.getJobName();
+                    int[] finalStats = characterCreationScreen.getFinalStats();
+
+                    currentSaveData = new SaveDataManager.SaveData(playerName, jobName, finalStats, 1, 2, 2, "NORTH");
 
                     saveDataManager.saveGame(selectedSaveSlot, currentSaveData);
                     fieldScreen.loadFromSaveData(currentSaveData);

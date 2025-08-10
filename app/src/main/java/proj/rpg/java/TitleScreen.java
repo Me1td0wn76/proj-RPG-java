@@ -34,8 +34,8 @@ public class TitleScreen extends GameScreen {
         String titleText = "DUNGEON EXPLORER";
         String titleTextJP = "ダンジョンエクスプロ-ラー";
 
-        // 英語タイトル（パターンベース描画）
-        uiRenderer.drawCenteredText(titleText, 960 / 2, 180, 2.0f, 1.0f, 1.0f, 0.8f, 1.0f);
+        // 英語タイトル（高品質テクスチャベース描画）
+        uiRenderer.drawHighQualityCenteredText(titleText, 960 / 2, 180, 2.0f, 1.0f, 1.0f, 0.8f, 1.0f);
 
         // 日本語タイトル（高品質テクスチャベース描画）
         uiRenderer.drawHighQualityCenteredText(titleTextJP, 960 / 2, 220, 1.5f, 0.9f, 0.9f, 0.7f, 1.0f);
@@ -44,8 +44,8 @@ public class TitleScreen extends GameScreen {
         String subtitleText = "A Wizardry-Style 3D RPG";
         String subtitleTextJP = "ウィザードリィふうの3DRPGゲーム";
 
-        // 英語サブタイトル（パターンベース描画）
-        uiRenderer.drawCenteredText(subtitleText, 960 / 2, 280, 1.0f, 0.8f, 0.8f, 0.6f, 1.0f);
+        // 英語サブタイトル（高品質テクスチャベース描画）
+        uiRenderer.drawHighQualityCenteredText(subtitleText, 960 / 2, 280, 1.0f, 0.8f, 0.8f, 0.6f, 1.0f);
 
         // 日本語サブタイトル（高品質テクスチャベース描画）
         uiRenderer.drawHighQualityCenteredText(subtitleTextJP, 960 / 2, 300, 0.8f, 0.7f, 0.7f, 0.5f, 1.0f);
@@ -55,16 +55,15 @@ public class TitleScreen extends GameScreen {
         String pressText = "Press SPACE to continue";
         String pressTextJP = "SPACEキーでつづける";
 
-        // 英語（パターンベース描画）
-        uiRenderer.drawCenteredText(pressText, 960 / 2, 400, 1.0f, 1.0f, 1.0f, 1.0f, blinkAlpha);
+        // 英語（高品質テクスチャベース描画）
+        uiRenderer.drawHighQualityCenteredText(pressText, 960 / 2, 400, 1.0f, 1.0f, 1.0f, 1.0f, blinkAlpha);
 
         // 日本語（高品質テクスチャベース描画）
         uiRenderer.drawHighQualityCenteredText(pressTextJP, 960 / 2, 430, 1.2f, 1.0f, 1.0f, 0.8f, blinkAlpha);
 
-        // バージョン情報
-        // バージョン情報
+        // バージョン情報（高品質テクスチャベース描画）
         String versionText = "v1.0.0";
-        uiRenderer.drawText(versionText, 10, 540 - 30, 0.8f, 0.5f, 0.5f, 0.5f, 1.0f);
+        uiRenderer.drawHighQualityText(versionText, 10, 540 - 30, 0.8f, 0.5f, 0.5f, 0.5f, 1.0f);
     }
 
     @Override

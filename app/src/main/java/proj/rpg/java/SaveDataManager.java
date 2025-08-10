@@ -19,6 +19,8 @@ public class SaveDataManager {
 
     public static class SaveData {
         public String playerName;
+        public String jobName;
+        public int[] stats; // STR, INT, VIT, AGI, LUK
         public int playerLevel;
         public int playerX, playerY;
         public String facing;
@@ -31,6 +33,21 @@ public class SaveDataManager {
 
         public SaveData(String name, int level, int x, int y, String face) {
             this.playerName = name;
+            this.jobName = "Warrior"; // デフォルト職業
+            this.stats = new int[] { 15, 8, 14, 10, 8 }; // デフォルトステータス
+            this.playerLevel = level;
+            this.playerX = x;
+            this.playerY = y;
+            this.facing = face;
+            this.createdAt = getCurrentTimeString();
+            this.lastPlayedAt = getCurrentTimeString();
+            this.playtimeMinutes = 0;
+        }
+
+        public SaveData(String name, String job, int[] characterStats, int level, int x, int y, String face) {
+            this.playerName = name;
+            this.jobName = job;
+            this.stats = characterStats.clone();
             this.playerLevel = level;
             this.playerX = x;
             this.playerY = y;
