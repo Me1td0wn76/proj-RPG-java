@@ -71,50 +71,35 @@ public class SaveSelectScreen extends GameScreen {
         for (int i = 0; i < 10; i++) {
             float y = slotStartY + i * slotSpacing;
             boolean selected = (i == selectedSlot);
-
             String slotText;
             SaveDataManager.SaveData data = saveSlots[i];
-
             if (data != null) {
-                // 既存データ
-                slotText = String.format("Slot %d: %s (Level %d) - %s",
-                        i + 1, data.playerName, data.playerLevel, data.lastPlayedAt);
+                slotText = String.format("Slot %d: %s (Level %d) - %s", i + 1, data.playerName, data.playerLevel,
+                        data.lastPlayedAt);
             } else {
-                // 空きスロット
                 slotText = String.format("Slot %d: [Empty]", i + 1);
             }
-
             if (selected) {
-                // カーソル表示
                 String cursor = "> ";
-                uiRenderer.drawText(cursor, 50, y, 1.0f, 1.0f, 1.0f, 0.2f, 1.0f);
-
-                // 選択中の項目を明るく表示
-                uiRenderer.drawText(slotText, 80, y, 1.0f, 1.0f, 1.0f, 0.8f, 1.0f);
-
-                // 背景ハイライト
+                uiRenderer.drawHighQualityText(cursor, 50, y, 1.0f, 1.0f, 1.0f, 0.2f, 1.0f);
+                uiRenderer.drawHighQualityText(slotText, 80, y, 1.0f, 1.0f, 1.0f, 0.8f, 1.0f);
                 uiRenderer.drawRect(40, y - 5, 880, 30, 0.2f, 0.4f, 0.2f, 0.6f);
             } else {
-                // 通常表示
                 if (data != null) {
-                    uiRenderer.drawText(slotText, 80, y, 1.0f, 0.8f, 0.8f, 0.6f, 1.0f);
+                    uiRenderer.drawHighQualityText(slotText, 80, y, 1.0f, 0.8f, 0.8f, 0.6f, 1.0f);
                 } else {
-                    uiRenderer.drawText(slotText, 80, y, 1.0f, 0.5f, 0.5f, 0.5f, 1.0f);
+                    uiRenderer.drawHighQualityText(slotText, 80, y, 1.0f, 0.5f, 0.5f, 0.5f, 1.0f);
                 }
             }
         }
-
-        // 操作方法の説明
         String instruction = "Use UP/DOWN arrows to navigate, SPACE to select";
         float instrX = 960 / 2 - (instruction.length() * 8) / 2;
-        uiRenderer.drawText(instruction, instrX, 500, 0.8f, 0.6f, 0.6f, 0.6f, 1.0f);
-
-        // 確認ダイアログ
+        uiRenderer.drawHighQualityText(instruction, instrX, 500, 0.8f, 0.6f, 0.6f, 0.6f, 1.0f);
         if (confirming) {
             String confirmMsg = "このスロットでよいですか？ Y:はい N:いいえ";
             float confirmX = 960 / 2 - (confirmMsg.length() * 10) / 2;
             uiRenderer.drawRect(confirmX - 10, 520, confirmMsg.length() * 10 + 20, 40, 0.2f, 0.2f, 0.2f, 0.8f);
-            uiRenderer.drawText(confirmMsg, confirmX, 530, 1.0f, 1.0f, 1.0f, 0.8f, 1.0f);
+            uiRenderer.drawHighQualityText(confirmMsg, confirmX, 530, 1.0f, 1.0f, 1.0f, 0.8f, 1.0f);
         }
     }
 

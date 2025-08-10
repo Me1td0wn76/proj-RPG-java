@@ -45,60 +45,20 @@ public class MainMenuScreen extends GameScreen {
 
     @Override
     public void render(UIRenderer uiRenderer) {
-        // 画面をクリア（暗い色）
         uiRenderer.clear(0.05f, 0.05f, 0.2f, 1.0f);
-
-        // タイトル
         String title = "MAIN MENU";
-        float titleX = 960 / 2 - (title.length() * 12 * 1.5f) / 2;
-        uiRenderer.drawText(title, titleX, 150, 1.5f, 0.9f, 0.9f, 0.9f, 1.0f);
-
-        // メニュー項目
-        float menuStartY = 250;
-        float menuSpacing = 40;
-
+        uiRenderer.drawHighQualityCenteredText(title, 960 / 2, 80, 1.5f, 1.0f, 1.0f, 0.8f, 1.0f);
+        uiRenderer.drawHighQualityCenteredText("メインメニュー", 960 / 2, 120, 1.2f, 0.9f, 0.9f, 0.7f, 1.0f);
         for (int i = 0; i < menuItems.length; i++) {
-            float y = menuStartY + i * menuSpacing;
-            boolean selected = (i == selectedIndex);
-
-            if (selected) {
-                // アニメーション効果を追加
-                float pulseScale = 1.0f + (float) (Math.sin(selectionTimer * 4.0) * 0.1);
-                float glowAlpha = (float) (Math.sin(selectionTimer * 3.0) * 0.3 + 0.7);
-
-                // より大きく明確な背景ハイライト（脈打つ効果）
-                uiRenderer.drawRect(280, y - 8, 400, 36, 0.3f * glowAlpha, 0.3f * glowAlpha, 0.6f * glowAlpha, 0.9f);
-
-                // 左右のカーソル矢印（脈打つ効果）
-                String leftCursor = ">";
-                String rightCursor = "<";
-                uiRenderer.drawText(leftCursor, 250, y, 1.2f * pulseScale, 1.0f, 1.0f, 0.3f, glowAlpha);
-                uiRenderer.drawText(rightCursor, 700, y, 1.2f * pulseScale, 1.0f, 1.0f, 0.3f, glowAlpha);
-
-                // 選択中の項目（英語と日本語両方表示）
-                float itemX = 320;
-                uiRenderer.drawText(menuItems[i], itemX, y - 10, 1.0f, 0.8f, 0.8f, 0.8f, 1.0f);
-                uiRenderer.drawText(menuItemsJP[i], itemX, y + 5, 1.2f * pulseScale, 1.0f, 1.0f, 0.9f, glowAlpha);
-
-                // 追加の装飾線（グロー効果）
-                uiRenderer.drawRect(290, y - 12, 380, 3, 0.8f, 0.8f, 0.2f, glowAlpha);
-                uiRenderer.drawRect(290, y + 30, 380, 3, 0.8f, 0.8f, 0.2f, glowAlpha);
-            } else {
-                // 通常の項目
-                float itemX = 350;
-                uiRenderer.drawText(menuItems[i], itemX, y, 0.9f, 0.5f, 0.5f, 0.5f, 0.8f);
-            }
+            float y = 200 + i * 60;
+            float r = (i == selectedIndex) ? 1.0f : 0.8f;
+            float g = (i == selectedIndex) ? 1.0f : 0.8f;
+            float b = (i == selectedIndex) ? 0.0f : 0.8f;
+            float a = 1.0f;
+            uiRenderer.drawHighQualityCenteredText(menuItemsJP[i] + " / " + menuItems[i], 960 / 2, y, 1.2f, r, g, b, a);
         }
-
-        // 操作方法の説明（日本語）
-        String instruction = "じょうげキーでせんたく、SPACEでけってい";
-        float instrX = 960 / 2 - (instruction.length() * 8) / 2;
-        uiRenderer.drawText(instruction, instrX, 500, 0.8f, 0.5f, 0.5f, 0.5f, 1.0f);
-
-        // 現在の選択項目を上部に表示
-        String currentSelection = "げんざいのせんたく: " + menuItemsJP[selectedIndex];
-        float selX = 960 / 2 - (currentSelection.length() * 10) / 2;
-        uiRenderer.drawText(currentSelection, selX, 100, 1.0f, 0.7f, 0.9f, 0.7f, 1.0f);
+        String instruction = "↑↓で選択、SPACEで決定";
+        uiRenderer.drawHighQualityCenteredText(instruction, 960 / 2, 500, 0.9f, 0.7f, 0.7f, 0.7f, 1.0f);
     }
 
     @Override
