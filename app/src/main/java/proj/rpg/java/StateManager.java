@@ -107,72 +107,25 @@ public class StateManager {
                 // フィールドは通常は遷移しない（ゲームのメイン画面）
                 // 将来的にはバトル画面への遷移なども実装
             }
+            case BATTLE -> {
+                // TODO: 戦闘画面の更新処理
+            }
+            case GAME_OVER -> {
+                // TODO: ゲームオーバー画面の更新処理
+            }
         }
     }
 
     public void render(Renderer renderer) {
-        // 画面クリア
-        uiRenderer.clear(0.1f, 0.1f, 0.3f, 1.0f);
-
         switch (currentState) {
             case TITLE -> {
                 uiRenderer.beginUI();
-
-                // タイトルテキスト（大きく、見やすく）
-                String titleText = "DUNGEON EXPLORER";
-                float titleX = 480 - (titleText.length() * 12) / 2;
-                uiRenderer.drawText(titleText, titleX, 150.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
-
-                // メニュー項目を表示
-                String[] menuItems = { "Start New Game", "Continue", "Settings", "Exit" };
-                float menuStartY = 250;
-
-                for (int i = 0; i < menuItems.length; i++) {
-                    float y = menuStartY + i * 40;
-                    float x = 480 - (menuItems[i].length() * 12) / 2;
-                    uiRenderer.drawText(menuItems[i], x, y, 1.0f, 0.9f, 0.9f, 0.9f, 1.0f);
-                }
-
-                // 操作説明
-                String instruction = "Press SPACE to start";
-                float instrX = 480 - (instruction.length() * 12) / 2;
-                uiRenderer.drawText(instruction, instrX, 450.0f, 1.0f, 1.0f, 1.0f, 0.8f, 1.0f);
-
+                titleScreen.render(uiRenderer);
                 uiRenderer.endUI();
             }
             case MAIN_MENU -> {
                 uiRenderer.beginUI();
-
-                // メインメニュータイトル
-                String title = "MAIN MENU";
-                float titleX = 480 - (title.length() * 12 * 1.5f) / 2;
-                uiRenderer.drawText(title, titleX, 100.0f, 1.5f, 0.9f, 0.9f, 0.9f, 1.0f);
-
-                // メニュー項目
-                String[] menuItems = { "New Game", "Continue", "Settings", "Exit" };
-                float menuStartY = 200;
-                float menuSpacing = 40;
-
-                for (int i = 0; i < menuItems.length; i++) {
-                    float y = menuStartY + i * menuSpacing;
-                    float x = 480 - (menuItems[i].length() * 12) / 2;
-
-                    // 選択中の項目を明るく表示
-                    boolean selected = (i == 0); // 仮に最初の項目を選択中とする
-                    if (selected) {
-                        String cursor = "> ";
-                        uiRenderer.drawText(cursor, x - 30, y, 1.0f, 1.0f, 1.0f, 0.2f, 1.0f);
-                        uiRenderer.drawText(menuItems[i], x, y, 1.0f, 1.0f, 1.0f, 0.8f, 1.0f);
-                    } else {
-                        uiRenderer.drawText(menuItems[i], x, y, 1.0f, 0.7f, 0.7f, 0.7f, 1.0f);
-                    }
-                }
-
-                // 操作説明
-                String instruction = "UP/DOWN: Navigate, SPACE: Select";
-                float instrX = 480 - (instruction.length() * 10) / 2;
-                uiRenderer.drawText(instruction, instrX, 450.0f, 0.8f, 0.6f, 0.6f, 0.6f, 1.0f);
-
+                mainMenuScreen.render(uiRenderer);
                 uiRenderer.endUI();
             }
             case SAVE_SELECT -> {
@@ -191,6 +144,18 @@ public class StateManager {
                 uiRenderer.endUI();
             }
             case FIELD -> fieldScreen.render(renderer, uiRenderer);
+            case BATTLE -> {
+                // TODO: 戦闘画面の実装
+                uiRenderer.beginUI();
+                uiRenderer.drawText("BATTLE - Under Construction", 300, 300, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+                uiRenderer.endUI();
+            }
+            case GAME_OVER -> {
+                // TODO: ゲームオーバー画面の実装
+                uiRenderer.beginUI();
+                uiRenderer.drawText("GAME OVER", 400, 300, 1.5f, 1.0f, 0.0f, 0.0f, 1.0f);
+                uiRenderer.endUI();
+            }
         }
     }
 
@@ -200,11 +165,18 @@ public class StateManager {
 
         // 状態変更時の初期化処理
         switch (newState) {
+            case TITLE -> titleScreen.onEnter();
             case MAIN_MENU -> mainMenuScreen.onEnter();
             case SAVE_SELECT -> saveSelectScreen.onEnter();
             case CHARACTER_CREATION -> characterCreationScreen.onEnter();
             case SETTINGS -> settingsScreen.onEnter();
             case FIELD -> fieldScreen.onEnter();
+            case BATTLE -> {
+                // TODO: 戦闘画面の初期化
+            }
+            case GAME_OVER -> {
+                // TODO: ゲームオーバー画面の初期化
+            }
         }
     }
 

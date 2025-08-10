@@ -8,8 +8,10 @@ import org.lwjgl.glfw.GLFW;
  */
 public class MainMenuScreen extends GameScreen {
     private String[] menuItems = { "New Game", "Continue", "Settings", "Exit" };
+    private String[] menuItemsJP = { "あたらしいゲーム", "つづきから", "せってい", "しゅうりょう" };
     private int selectedIndex = 0;
     private String selectedOption = "";
+    private float selectionTimer = 0.0f; // アニメーション用タイマー
 
     private boolean upPressed = false;
     private boolean downPressed = false;
@@ -17,10 +19,13 @@ public class MainMenuScreen extends GameScreen {
 
     @Override
     public void update(Input input) {
+        selectionTimer += 0.016f; // 60FPSでの時間更新
+
         // 上キーでメニュー項目を上に移動
         if (input.isKeyPressed(GLFW.GLFW_KEY_UP) && !upPressed) {
             upPressed = true;
             selectedIndex = (selectedIndex - 1 + menuItems.length) % menuItems.length;
+            selectionTimer = 0.0f; // 選択変更時にタイマーリセット
         }
         if (!input.isKeyPressed(GLFW.GLFW_KEY_UP)) {
             upPressed = false;
@@ -30,6 +35,7 @@ public class MainMenuScreen extends GameScreen {
         if (input.isKeyPressed(GLFW.GLFW_KEY_DOWN) && !downPressed) {
             downPressed = true;
             selectedIndex = (selectedIndex + 1) % menuItems.length;
+            selectionTimer = 0.0f; // 選択変更時にタイマーリセット
         }
         if (!input.isKeyPressed(GLFW.GLFW_KEY_DOWN)) {
             downPressed = false;
@@ -72,27 +78,43 @@ public class MainMenuScreen extends GameScreen {
             boolean selected = (i == selectedIndex);
 
             if (selected) {
-                // 選択中の項目は背景とカーソルを表示
-                String cursor = "> ";
-                float cursorX = 300;
-                uiRenderer.drawText(cursor, cursorX, y, 1.0f, 1.0f, 1.0f, 0.2f, 1.0f);
+                // アニメーション効果を追加
+                float pulseScale = 1.0f + (float) (Math.sin(selectionTimer * 4.0) * 0.1);
+                float glowAlpha = (float) (Math.sin(selectionTimer * 3.0) * 0.3 + 0.7);
 
-                float itemX = cursorX + 30;
-                uiRenderer.drawText(menuItems[i], itemX, y, 1.0f, 1.0f, 1.0f, 0.8f, 1.0f);
+                // より大きく明確な背景ハイライト（脈打つ効果）
+                uiRenderer.drawRect(280, y - 8, 400, 36, 0.3f * glowAlpha, 0.3f * glowAlpha, 0.6f * glowAlpha, 0.9f);
 
-                // 背景ハイライト
-                uiRenderer.drawRect(cursorX - 10, y - 5, 300, 30, 0.2f, 0.2f, 0.4f, 0.6f);
+                // 左右のカーソル矢印（脈打つ効果）
+                String leftCursor = ">";
+                String rightCursor = "<";
+                uiRenderer.drawText(leftCursor, 250, y, 1.2f * pulseScale, 1.0f, 1.0f, 0.3f, glowAlpha);
+                uiRenderer.drawText(rightCursor, 700, y, 1.2f * pulseScale, 1.0f, 1.0f, 0.3f, glowAlpha);
+
+                // 選択中の項目（英語と日本語両方表示）
+                float itemX = 320;
+                uiRenderer.drawText(menuItems[i], itemX, y - 10, 1.0f, 0.8f, 0.8f, 0.8f, 1.0f);
+                uiRenderer.drawText(menuItemsJP[i], itemX, y + 5, 1.2f * pulseScale, 1.0f, 1.0f, 0.9f, glowAlpha);
+
+                // 追加の装飾線（グロー効果）
+                uiRenderer.drawRect(290, y - 12, 380, 3, 0.8f, 0.8f, 0.2f, glowAlpha);
+                uiRenderer.drawRect(290, y + 30, 380, 3, 0.8f, 0.8f, 0.2f, glowAlpha);
             } else {
                 // 通常の項目
-                float itemX = 330;
-                uiRenderer.drawText(menuItems[i], itemX, y, 1.0f, 0.7f, 0.7f, 0.7f, 1.0f);
+                float itemX = 350;
+                uiRenderer.drawText(menuItems[i], itemX, y, 0.9f, 0.5f, 0.5f, 0.5f, 0.8f);
             }
         }
 
-        // 操作方法の説明
-        String instruction = "Use UP/DOWN arrows to navigate, SPACE to select";
+        // 操作方法の説明（日本語）
+        String instruction = "じょうげキーでせんたく、SPACEでけってい";
         float instrX = 960 / 2 - (instruction.length() * 8) / 2;
-        uiRenderer.drawText(instruction, instrX, 480, 0.8f, 0.5f, 0.5f, 0.5f, 1.0f);
+        uiRenderer.drawText(instruction, instrX, 500, 0.8f, 0.5f, 0.5f, 0.5f, 1.0f);
+
+        // 現在の選択項目を上部に表示
+        String currentSelection = "げんざいのせんたく: " + menuItemsJP[selectedIndex];
+        float selX = 960 / 2 - (currentSelection.length() * 10) / 2;
+        uiRenderer.drawText(currentSelection, selX, 100, 1.0f, 0.7f, 0.9f, 0.7f, 1.0f);
     }
 
     @Override
@@ -100,6 +122,7 @@ public class MainMenuScreen extends GameScreen {
         super.onEnter();
         selectedIndex = 0;
         selectedOption = "";
+        selectionTimer = 0.0f;
         upPressed = false;
         downPressed = false;
         spacePressed = false;
