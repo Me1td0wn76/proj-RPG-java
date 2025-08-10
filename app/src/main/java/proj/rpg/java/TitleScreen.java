@@ -33,30 +33,33 @@ public class TitleScreen extends GameScreen {
         // タイトルテキスト
         String titleText = "DUNGEON EXPLORER";
         String titleTextJP = "ダンジョンエクスプロ-ラー";
-        float titleX = 960 / 2 - (titleText.length() * 12 * 2.0f) / 2; // 中央揃え
-        float titleXJP = 960 / 2 - (titleTextJP.length() * 12 * 1.5f) / 2;
 
-        uiRenderer.drawText(titleText, titleX, 180, 2.0f, 1.0f, 1.0f, 0.8f, 1.0f);
-        uiRenderer.drawText(titleTextJP, titleXJP, 220, 1.5f, 0.9f, 0.9f, 0.7f, 1.0f);
+        // 英語タイトル（パターンベース描画）
+        uiRenderer.drawCenteredText(titleText, 960 / 2, 180, 2.0f, 1.0f, 1.0f, 0.8f, 1.0f);
+
+        // 日本語タイトル（高品質テクスチャベース描画）
+        uiRenderer.drawHighQualityCenteredText(titleTextJP, 960 / 2, 220, 1.5f, 0.9f, 0.9f, 0.7f, 1.0f);
 
         // サブタイトル
         String subtitleText = "A Wizardry-Style 3D RPG";
         String subtitleTextJP = "ウィザードリィふうの3DRPGゲーム";
-        float subtitleX = 960 / 2 - (subtitleText.length() * 12) / 2;
-        float subtitleXJP = 960 / 2 - (subtitleTextJP.length() * 12 * 0.8f) / 2;
 
-        uiRenderer.drawText(subtitleText, subtitleX, 280, 1.0f, 0.8f, 0.8f, 0.6f, 1.0f);
-        uiRenderer.drawText(subtitleTextJP, subtitleXJP, 300, 0.8f, 0.7f, 0.7f, 0.5f, 1.0f);
+        // 英語サブタイトル（パターンベース描画）
+        uiRenderer.drawCenteredText(subtitleText, 960 / 2, 280, 1.0f, 0.8f, 0.8f, 0.6f, 1.0f);
+
+        // 日本語サブタイトル（高品質テクスチャベース描画）
+        uiRenderer.drawHighQualityCenteredText(subtitleTextJP, 960 / 2, 300, 0.8f, 0.7f, 0.7f, 0.5f, 1.0f);
 
         // 点滅する「Press SPACE」メッセージ
         float blinkAlpha = (float) (Math.sin(titleTimer * 3.0) * 0.5 + 0.5);
         String pressText = "Press SPACE to continue";
         String pressTextJP = "SPACEキーでつづける";
-        float pressX = 960 / 2 - (pressText.length() * 12) / 2;
-        float pressXJP = 960 / 2 - (pressTextJP.length() * 12 * 1.2f) / 2;
 
-        uiRenderer.drawText(pressText, pressX, 400, 1.0f, 1.0f, 1.0f, 1.0f, blinkAlpha);
-        uiRenderer.drawText(pressTextJP, pressXJP, 430, 1.2f, 1.0f, 1.0f, 0.8f, blinkAlpha);
+        // 英語（パターンベース描画）
+        uiRenderer.drawCenteredText(pressText, 960 / 2, 400, 1.0f, 1.0f, 1.0f, 1.0f, blinkAlpha);
+
+        // 日本語（高品質テクスチャベース描画）
+        uiRenderer.drawHighQualityCenteredText(pressTextJP, 960 / 2, 430, 1.2f, 1.0f, 1.0f, 0.8f, blinkAlpha);
 
         // バージョン情報
         // バージョン情報

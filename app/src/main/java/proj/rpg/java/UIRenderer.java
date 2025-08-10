@@ -94,31 +94,59 @@ public class UIRenderer {
     }
 
     /**
-     * テキスト描画（新しいテクスチャベースレンダラー使用）
+     * テキスト描画（元のパターンベースレンダラー使用 - 一時的な修正）
      */
     public void drawText(String text, float x, float y, float scale, float r, float g, float b, float a) {
-        textureTextRenderer.drawText(text, x, y, scale, r, g, b, a);
+        textRenderer.drawText(text, x, y, scale, r, g, b, a);
     }
 
     /**
      * シンプルなテキスト描画（RGB指定）
      */
     public void drawText(String text, float x, float y, float r, float g, float b) {
-        textureTextRenderer.drawText(text, x, y, r, g, b);
+        textRenderer.drawText(text, x, y, r, g, b);
     }
 
     /**
      * 中央揃えテキストの描画
      */
     public void drawCenteredText(String text, float centerX, float y, float r, float g, float b) {
-        textureTextRenderer.drawCenteredText(text, centerX, y, r, g, b);
+        textRenderer.drawCenteredText(text, centerX, y, r, g, b);
     }
 
     /**
      * 中央揃えテキストの描画（スケール指定）
      */
     public void drawCenteredText(String text, float centerX, float y, float scale, float r, float g, float b, float a) {
-        textureTextRenderer.drawCenteredText(text, centerX, y, scale, r, g, b, a);
+        float textWidth = text.length() * 12f * scale; // charWidth = 12
+        float startX = centerX - textWidth / 2;
+        textRenderer.drawText(text, startX, y, scale, r, g, b, a);
+    }
+
+    /**
+     * 高品質テクスチャベーステキスト描画（日本語対応）
+     */
+    public void drawHighQualityText(String text, float x, float y, float scale, float r, float g, float b, float a) {
+        java.awt.Font font = new java.awt.Font("MS Gothic", java.awt.Font.PLAIN, (int) (24 * scale));
+        java.awt.Color textColor = java.awt.Color.WHITE;
+
+        int textureID = TextureUtils.createTextTexture(text, font, textColor, 512, 64);
+
+        // テキストサイズの推定
+        float estimatedWidth = text.length() * 12f * scale;
+        float estimatedHeight = 20f * scale;
+
+        TextureUtils.drawTexturedQuad(textureID, x, y, estimatedWidth, estimatedHeight, r, g, b, a);
+    }
+
+    /**
+     * 高品質中央揃えテキストの描画
+     */
+    public void drawHighQualityCenteredText(String text, float centerX, float y, float scale, float r, float g, float b,
+            float a) {
+        float estimatedWidth = text.length() * 12f * scale;
+        float startX = centerX - estimatedWidth / 2;
+        drawHighQualityText(text, startX, y, scale, r, g, b, a);
     }
 
     /**
