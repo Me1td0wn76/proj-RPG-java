@@ -13,6 +13,7 @@ public class SaveSelectScreen extends GameScreen {
     private SaveDataManager.SaveData[] saveSlots;
 
     private InputController inputController = new InputController();
+    private boolean confirming = false; // 確認ダイアログ表示フラグ
 
     public SaveSelectScreen(SaveDataManager saveDataManager) {
         this.saveDataManager = saveDataManager;
@@ -21,20 +22,36 @@ public class SaveSelectScreen extends GameScreen {
 
     @Override
     public void update(Input input) {
-        // 上下キーでスロット選択（InputControllerを使用）
-        inputController.handleKeyInput(input, GLFW.GLFW_KEY_UP, () -> {
-            selectedSlot = (selectedSlot - 1 + 10) % 10;
-        });
+        if (transitionRequested) {
+            // 画面遷移フラグは1フレームのみtrue
+            transitionRequested = false;
+            return;
+        }
+        if (!confirming) {
+            // 上下キーでスロット選択（InputControllerを使用）
+            inputController.handleKeyInput(input, GLFW.GLFW_KEY_UP, () -> {
+                selectedSlot = (selectedSlot - 1 + 10) % 10;
+            });
 
-        inputController.handleKeyInput(input, GLFW.GLFW_KEY_DOWN, () -> {
-            selectedSlot = (selectedSlot + 1) % 10;
-        });
+            inputController.handleKeyInput(input, GLFW.GLFW_KEY_DOWN, () -> {
+                selectedSlot = (selectedSlot + 1) % 10;
+            });
 
-        // スペースキーで選択実行（InputControllerを使用）
-        inputController.handleKeyInput(input, GLFW.GLFW_KEY_SPACE, () -> {
-            isNewGame = (saveSlots[selectedSlot] == null);
-            transitionRequested = true;
-        });
+            // スペースキーで選択実行（InputControllerを使用）
+            inputController.handleKeyInput(input, GLFW.GLFW_KEY_SPACE, () -> {
+                confirming = true;
+            });
+        } else {
+            // 確認中: Yで決定、Nでキャンセル
+            inputController.handleKeyInput(input, GLFW.GLFW_KEY_Y, () -> {
+                isNewGame = (saveSlots[selectedSlot] == null);
+                confirming = false;
+                transitionRequested = true;
+            });
+            inputController.handleKeyInput(input, GLFW.GLFW_KEY_N, () -> {
+                confirming = false;
+            });
+        }
     }
 
     @Override
@@ -91,6 +108,14 @@ public class SaveSelectScreen extends GameScreen {
         String instruction = "Use UP/DOWN arrows to navigate, SPACE to select";
         float instrX = 960 / 2 - (instruction.length() * 8) / 2;
         uiRenderer.drawText(instruction, instrX, 500, 0.8f, 0.6f, 0.6f, 0.6f, 1.0f);
+
+        // 確認ダイアログ
+        if (confirming) {
+            String confirmMsg = "このスロットでよいですか？ Y:はい N:いいえ";
+            float confirmX = 960 / 2 - (confirmMsg.length() * 10) / 2;
+            uiRenderer.drawRect(confirmX - 10, 520, confirmMsg.length() * 10 + 20, 40, 0.2f, 0.2f, 0.2f, 0.8f);
+            uiRenderer.drawText(confirmMsg, confirmX, 530, 1.0f, 1.0f, 1.0f, 0.8f, 1.0f);
+        }
     }
 
     @Override
@@ -104,6 +129,8 @@ public class SaveSelectScreen extends GameScreen {
 
         selectedSlot = 0;
         isNewGame = false;
+        confirming = false;
+        transitionRequested = false;
         inputController.reset(); // 入力状態をリセット
     }
 
