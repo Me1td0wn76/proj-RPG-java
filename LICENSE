@@ -1,4 +1,4 @@
-MIT License
+# MIT License
 
 Copyright (c) 2025 proj-RPG-java Contributors
 
@@ -19,30 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
----
-
-## Third-party Licenses
-
-This project uses the following third-party libraries:
-
-### LWJGL (Lightweight Java Game Library)
-- **License**: BSD 3-Clause License
-- **URL**: https://www.lwjgl.org/
-- **Copyright**: Copyright (c) 2012-present Lightweight Java Game Library
-- **Usage**: OpenGL/GLFW bindings for window management and graphics
-
-### JOML (Java OpenGL Math Library)  
-- **License**: MIT License
-- **URL**: https://github.com/JOML-CI/JOML
-- **Copyright**: Copyright (c) 2015-2023 Kai Burjack
-- **Usage**: Matrix and vector mathematics for 3D calculations
-
-### JUnit 5 (JUnit Jupiter)
-- **License**: Eclipse Public License 2.0
-- **URL**: https://junit.org/junit5/
-- **Copyright**: Copyright (c) 2015-2023 JUnit Team
-- **Usage**: Unit testing framework (development/testing only)
-
-All third-party libraries retain their original licenses and copyright notices.
-This project's MIT license applies only to the original code written for this project.
