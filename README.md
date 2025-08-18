@@ -1,7 +1,6 @@
 # Wizardry-like Dungeon RPG
 
-Java + LWJGL で作成された Wizardry 風の擬似3DダンジョンRPGです。  
-グリッドベースの移動システムと、シンプルな一人称視点での探索を楽しめます。
+Java + LWJGL で作成。
 
 ## 🎮 ゲーム概要
 
